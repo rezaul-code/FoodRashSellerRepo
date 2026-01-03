@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#F5F5F5">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="JWT Token Decoder"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#212121"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Decodes your JWT token to check if it contains user_id"
+        android:textSize="12sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnDecodeToken"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Decode Token"
+        android:textAllCaps="false"
+        android:backgroundTint="#FF6B35"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnCopyToken"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Copy Token to Clipboard (Paste at jwt.io)"
+        android:textAllCaps="false"
+        android:backgroundTint="#4CAF50"
+        android:layout_marginBottom="16dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvTokenInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loading token..."
+            android:textSize="11sp"
+            android:textColor="#333333"
+            android:typeface="monospace"
+            android:padding="12dp"
+            android:background="#FFFFFF"
+            android:textIsSelectable="true" />
+
+    </ScrollView>
+
+</LinearLayout>

@@ -14,6 +14,7 @@ public class Restaurant {
     private String bannerImageUrl;
     private List<MenuItem> menuItems;
 
+    // Getters
     public Long getId() {
         return id;
     }
@@ -48,5 +49,42 @@ public class Restaurant {
 
     public List<MenuItem> getMenuItems() {
         return menuItems;
+    }
+
+    // Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public void setOpen(Boolean open) {
+        this.open = open;
+    }
+
+    public void setSellerId(Long sellerId) {
+        this.sellerId = sellerId;
+    }
+
+    public void setBannerImageUrl(String bannerImageUrl) {
+        this.bannerImageUrl = bannerImageUrl;
+    }
+
+    public void setMenuItems(List<MenuItem> menuItems) {
+        this.menuItems = menuItems;
     }
 }

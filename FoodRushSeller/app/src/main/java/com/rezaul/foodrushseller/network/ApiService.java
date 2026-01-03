@@ -25,28 +25,34 @@ public interface ApiService {
 
     // ===================== AUTH =====================
 
-    @POST(Constants.BASE_URL +"/api/auth/seller/signup")
+    @POST(Constants.BASE_URL + "/api/auth/seller/signup")
     Call<ApiResponse> registerSeller(@Body RegisterRequest request);
 
-    @POST(Constants.BASE_URL +"/api/auth/login")
+    @POST(Constants.BASE_URL + "/api/auth/login")
     Call<LoginResponse> login(@Body LoginRequest request);
 
     // ===================== RESTAURANT =====================
 
-    @POST(Constants.BASE_URL +"/api/seller/restaurant")
+    @POST(Constants.BASE_URL + "/api/seller/restaurant")
     Call<ApiResponse> addRestaurant(@Body Restaurant restaurant);
 
-    @GET(Constants.BASE_URL +"/api/seller/restaurant")
+    @POST(Constants.BASE_URL + "/api/seller/restaurant")
+    Call<ApiResponse> addRestaurantJson(@Body RequestBody body);
+
+    @GET(Constants.BASE_URL + "/api/seller/restaurant")
     Call<List<Restaurant>> getRestaurants();
 
+    @GET(Constants.BASE_URL + "/api/seller/restaurant/{restaurantId}")
+    Call<Restaurant> getRestaurantById(@Path("restaurantId") Long restaurantId);
+
     @Multipart
-    @PUT(Constants.BASE_URL +"/api/seller/restaurant/{restaurantId}/banner")
+    @PUT(Constants.BASE_URL + "/api/seller/restaurant/{restaurantId}/banner")
     Call<ApiResponse> uploadRestaurantBanner(
             @Path("restaurantId") Long restaurantId,
             @Part MultipartBody.Part image
     );
 
-    @DELETE(Constants.BASE_URL +"/api/seller/restaurant/{restaurantId}/banner")
+    @DELETE(Constants.BASE_URL + "/api/seller/restaurant/{restaurantId}/banner")
     Call<ApiResponse> deleteRestaurantBanner(
             @Path("restaurantId") Long restaurantId
     );
@@ -59,6 +65,12 @@ public interface ApiService {
             @Path("restaurantId") Long restaurantId,
             @Part("data") RequestBody data,
             @Part MultipartBody.Part image
+    );
+
+    @POST(Constants.BASE_URL + "/api/seller/restaurant/{restaurantId}/menu")
+    Call<ApiResponse> addMenuItemJson(
+            @Path("restaurantId") Long restaurantId,
+            @Body RequestBody data
     );
 
     @Multipart

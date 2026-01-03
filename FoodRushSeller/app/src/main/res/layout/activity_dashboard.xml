@@ -5,17 +5,17 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5">
 
-    <!-- Top App Bar -->
+    <!-- Top App Bar with Logout -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
         android:title="My Restaurants"
         android:titleTextColor="@android:color/white"
+        android:background="@color/colorPrimary"
         app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light" />
 
-    <!-- Content -->
+    <!-- Restaurants List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerRestaurants"
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- Floating Action Button -->
+    <!-- Add Restaurant FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddRestaurant"
         android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
         app:srcCompat="@android:drawable/ic_input_add"
         app:backgroundTint="@color/colorPrimary"
         app:tint="@android:color/white"
-        app:layout_anchorGravity="bottom|end"
-        app:layout_anchor="@id/recyclerRestaurants" />
+        app:layout_anchor="@id/recyclerRestaurants"
+        app:layout_anchorGravity="bottom|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
