@@ -43,11 +43,12 @@ import retrofit2.Response;
 public class AddMenuItemActivity extends AppCompatActivity {
 
     private EditText etItemName, etPrice, etDescription;
-    private Button btnAddItem, btnSelectImage;
+    private Button btnAddItem, btnSelectImage, btnVeg, btnNonVeg;
     private ImageView ivMenuImage;
     private ProgressBar progressBar;
     private Long restaurantId;
     private File selectedImageFile;
+    private boolean isVeg = true; // Default to veg
     private static final String TAG = "AddMenuItemActivity";
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -79,6 +80,8 @@ public class AddMenuItemActivity extends AppCompatActivity {
         btnSelectImage = findViewById(R.id.btnSelectImage);
         ivMenuImage = findViewById(R.id.ivMenuImage);
         progressBar = findViewById(R.id.progressBar);
+        btnVeg = findViewById(R.id.btnVeg);
+        btnNonVeg = findViewById(R.id.btnNonVeg);
 
         // Image picker launcher
         imagePickerLauncher = registerForActivityResult(
@@ -114,6 +117,37 @@ public class AddMenuItemActivity extends AppCompatActivity {
         });
 
         btnAddItem.setOnClickListener(v -> addMenuItem());
+
+        // Veg/Non-Veg toggle buttons
+        btnVeg.setOnClickListener(v -> selectVeg(true));
+        btnNonVeg.setOnClickListener(v -> selectVeg(false));
+
+        // Set initial state - Veg selected
+        selectVeg(true);
+    }
+
+    private void selectVeg(boolean veg) {
+        isVeg = veg;
+
+        if (veg) {
+            // Veg selected - Green
+            btnVeg.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+            btnVeg.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+
+            btnNonVeg.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+            btnNonVeg.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
+            Log.d(TAG, "Veg selected");
+        } else {
+            // Non-Veg selected - Green
+            btnVeg.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+            btnVeg.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
+            btnNonVeg.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+            btnNonVeg.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+
+            Log.d(TAG, "Non-Veg selected");
+        }
     }
 
     private void openImagePicker() {
@@ -154,6 +188,7 @@ public class AddMenuItemActivity extends AppCompatActivity {
         Log.d(TAG, "Name: " + name);
         Log.d(TAG, "Price: " + priceStr);
         Log.d(TAG, "Description: " + description);
+        Log.d(TAG, "IsVeg: " + isVeg);
         Log.d(TAG, "Image selected: " + (selectedImageFile != null));
 
         // Validation
@@ -187,7 +222,7 @@ public class AddMenuItemActivity extends AppCompatActivity {
             return;
         }
 
-        // Check if image is selected (optional but recommended)
+        // Check if image is selected
         if (selectedImageFile == null) {
             Toast.makeText(this, "Please select a menu item image", Toast.LENGTH_SHORT).show();
             return;
@@ -199,12 +234,12 @@ public class AddMenuItemActivity extends AppCompatActivity {
 
     private void submitMenuItemWithImage(String name, double price, String description) {
         try {
-            // Create JSON data
+            // Create JSON data with veg field - use selected value
             JSONObject jsonData = new JSONObject();
             jsonData.put("name", name);
             jsonData.put("price", price);
             jsonData.put("description", description);
-            jsonData.put("veg", true);
+            jsonData.put("veg", isVeg);  // Use the selected veg/non-veg value
             jsonData.put("available", true);
 
             Log.d(TAG, "Request JSON: " + jsonData.toString());
@@ -316,5 +351,7 @@ public class AddMenuItemActivity extends AppCompatActivity {
         }
         btnAddItem.setEnabled(!show);
         btnSelectImage.setEnabled(!show);
+        btnVeg.setEnabled(!show);
+        btnNonVeg.setEnabled(!show);
     }
 }
