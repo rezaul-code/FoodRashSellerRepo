@@ -55,9 +55,19 @@
             android:name=".activities.AddRestaurantActivity"
             android:exported="false" />
 
+        <!-- ADD THIS NEW ACTIVITY -->
+        <activity
+            android:name=".activities.EditRestaurantActivity"
+            android:exported="false" />
+
         <!-- Menu Item Management -->
         <activity
             android:name=".activities.AddMenuItemActivity"
+            android:exported="false" />
+
+        <!-- NEW: Edit Menu Image Activity -->
+        <activity
+            android:name=".activities.EditMenuImageActivity"
             android:exported="false" />
 
         <!-- Debug Activities -->

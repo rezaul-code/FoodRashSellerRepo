@@ -3,6 +3,9 @@ package com.rezaul.foodrushseller.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,8 +30,11 @@ import retrofit2.Response;
 public class DashboardActivity extends AppCompatActivity {
 
     private RecyclerView recycler;
+    private ProgressBar progressBar;
+    private TextView tvEmptyMessage;
     private static final String TAG = "DashboardActivity";
     private static final int ADD_RESTAURANT_REQUEST = 1;
+    private static final int EDIT_RESTAURANT_REQUEST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +58,11 @@ public class DashboardActivity extends AppCompatActivity {
             Log.d(TAG, "Toolbar setup completed");
         }
 
+        // Initialize views
         recycler = findViewById(R.id.recyclerRestaurants);
+        progressBar = findViewById(R.id.progressBar);
+        tvEmptyMessage = findViewById(R.id.tvEmptyMessage);
+
         if (recycler != null) {
             recycler.setLayoutManager(new LinearLayoutManager(this));
             Log.d(TAG, "RecyclerView setup completed");
@@ -78,10 +88,24 @@ public class DashboardActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult - Request: " + requestCode + ", Result: " + resultCode);
 
-        if (requestCode == ADD_RESTAURANT_REQUEST && resultCode == RESULT_OK) {
-            Log.d(TAG, "Restaurant added successfully, reloading...");
-            loadRestaurants();
+        if (resultCode == RESULT_OK) {
+            if (requestCode == ADD_RESTAURANT_REQUEST) {
+                Log.d(TAG, "Restaurant added successfully, reloading...");
+                // Add small delay to ensure server has updated
+                loadRestaurantsWithDelay(500);
+            } else if (requestCode == EDIT_RESTAURANT_REQUEST) {
+                Log.d(TAG, "Restaurant edited successfully, reloading...");
+                // Add delay to ensure server has updated
+                loadRestaurantsWithDelay(500);
+            }
         }
+    }
+
+    private void loadRestaurantsWithDelay(long delayMs) {
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
+                this::loadRestaurants,
+                delayMs
+        );
     }
 
     private void logout() {
@@ -101,6 +125,17 @@ public class DashboardActivity extends AppCompatActivity {
     private void loadRestaurants() {
         Log.d(TAG, "========== LOADING RESTAURANTS ==========");
 
+        // Show progress bar, hide others
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        if (tvEmptyMessage != null) {
+            tvEmptyMessage.setVisibility(View.GONE);
+        }
+        if (recycler != null) {
+            recycler.setVisibility(View.GONE);
+        }
+
         PreferenceManager pref = new PreferenceManager(this);
         ApiService api = ApiClient.getClient(pref).create(ApiService.class);
 
@@ -113,29 +148,69 @@ public class DashboardActivity extends AppCompatActivity {
                 Log.d(TAG, "Message: " + response.message());
                 Log.d(TAG, "Is Successful: " + response.isSuccessful());
 
+                // Hide progress bar
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+
                 if (response.isSuccessful() && response.body() != null) {
                     List<Restaurant> restaurants = response.body();
                     Log.d(TAG, "Restaurants Count: " + restaurants.size());
 
                     if (!restaurants.isEmpty()) {
                         Log.d(TAG, "SUCCESS: Loaded " + restaurants.size() + " restaurants");
+
+                        // Show RecyclerView, hide empty message
+                        recycler.setVisibility(View.VISIBLE);
+                        tvEmptyMessage.setVisibility(View.GONE);
+
+                        // Log restaurant details with banner URLs
+                        for (Restaurant restaurant : restaurants) {
+                            Log.d(TAG, "Restaurant: " + restaurant.getName() +
+                                    " | ID: " + restaurant.getId() +
+                                    " | Banner URL: " + restaurant.getBannerImageUrl());
+                        }
+
+                        // Setup adapter with BOTH click listeners
                         recycler.setAdapter(new RestaurantAdapter(
                                 DashboardActivity.this,
                                 restaurants,
-                                restaurant -> {
-                                    Log.d(TAG, "Restaurant clicked: " + restaurant.getName());
-                                    Intent i = new Intent(
-                                            DashboardActivity.this,
-                                            RestaurantDetailsActivity.class);
-                                    i.putExtra("restaurant_id", restaurant.getId());
-                                    i.putExtra("restaurant_name", restaurant.getName());
-                                    startActivity(i);
+                                new RestaurantAdapter.OnRestaurantClickListener() {
+                                    @Override
+                                    public void onClick(Restaurant restaurant) {
+                                        // Open restaurant details (menu items)
+                                        Log.d(TAG, "Restaurant clicked: " + restaurant.getName());
+                                        Intent i = new Intent(
+                                                DashboardActivity.this,
+                                                RestaurantDetailsActivity.class);
+                                        i.putExtra("restaurant_id", restaurant.getId());
+                                        i.putExtra("restaurant_name", restaurant.getName());
+                                        startActivity(i);
+                                    }
+
+                                    @Override
+                                    public void onEditClick(Restaurant restaurant) {
+                                        // Open edit restaurant activity
+                                        Log.d(TAG, "Edit clicked for: " + restaurant.getName());
+                                        Log.d(TAG, "Current banner URL: " + restaurant.getBannerImageUrl());
+
+                                        Intent intent = new Intent(
+                                                DashboardActivity.this,
+                                                EditRestaurantActivity.class);
+                                        intent.putExtra("restaurant_id", restaurant.getId());
+                                        intent.putExtra("restaurant_name", restaurant.getName());
+                                        intent.putExtra("banner_url", restaurant.getBannerImageUrl());
+                                        startActivityForResult(intent, EDIT_RESTAURANT_REQUEST);
+                                    }
                                 }));
                     } else {
                         Log.d(TAG, "No restaurants found");
-                        Toast.makeText(DashboardActivity.this,
-                                "No restaurants yet. Add one!",
-                                Toast.LENGTH_SHORT).show();
+
+                        // Hide RecyclerView, show empty message
+                        recycler.setVisibility(View.GONE);
+                        tvEmptyMessage.setVisibility(View.VISIBLE);
+                        tvEmptyMessage.setText("No restaurants yet.\nTap + to add your first restaurant!");
+
                         recycler.setAdapter(null);
                     }
                 } else {
@@ -154,6 +229,11 @@ public class DashboardActivity extends AppCompatActivity {
                         Log.e(TAG, "Error reading error body", e);
                     }
 
+                    // Show error in empty message
+                    recycler.setVisibility(View.GONE);
+                    tvEmptyMessage.setVisibility(View.VISIBLE);
+                    tvEmptyMessage.setText("Error: " + errorMsg);
+
                     Toast.makeText(DashboardActivity.this,
                             errorMsg,
                             Toast.LENGTH_SHORT).show();
@@ -167,8 +247,20 @@ public class DashboardActivity extends AppCompatActivity {
                 Log.e(TAG, "Error Type: " + t.getClass().getName());
                 t.printStackTrace();
 
+                // Hide progress bar
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                String errorMessage = t.getMessage() != null ? t.getMessage() : "Unknown error";
+
+                // Show error in empty message
+                recycler.setVisibility(View.GONE);
+                tvEmptyMessage.setVisibility(View.VISIBLE);
+                tvEmptyMessage.setText("Network Error:\n" + errorMessage);
+
                 Toast.makeText(DashboardActivity.this,
-                        "Network Error: " + t.getMessage(),
+                        "Network Error: " + errorMessage,
                         Toast.LENGTH_LONG).show();
             }
         });

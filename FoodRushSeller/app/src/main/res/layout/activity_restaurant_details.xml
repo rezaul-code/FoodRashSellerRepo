@@ -5,65 +5,132 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5">
 
-    <!-- Top App Bar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:title="Menu Items"
-        android:titleTextColor="@android:color/white"
-        android:background="@color/colorPrimary"
-        app:navigationIcon="@android:drawable/ic_menu_revert"
-        app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light" />
+        android:layout_height="wrap_content">
 
-    <!-- Container for RecyclerView, ProgressBar, and Empty Message -->
-    <FrameLayout
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:navigationIcon="@android:drawable/ic_menu_revert"
+            app:title="Restaurant Details"
+            app:titleTextColor="@android:color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Menu List -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerMenu"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="12dp"
-            android:clipToPadding="false" />
-
-        <!-- Progress Bar -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+            android:layout_margin="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
 
-        <!-- Empty State Message -->
-        <TextView
-            android:id="@+id/tvEmptyMessage"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvDetailName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Restaurant Name"
+                    android:textColor="#212121"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDetailAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Address"
+                    android:textColor="#757575" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="12dp"
+                    android:background="#EEEEEE" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvDetailLocation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawablePadding="8dp"
+                        android:text="Location: ---"
+                        android:textColor="#424242"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:id="@+id/tvDetailDelivery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#E8F5E9"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="DELIVERY"
+                        android:textColor="#2E7D32"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="No menu items yet"
-            android:textSize="16sp"
-            android:textColor="#999999"
-            android:visibility="gone"
-            android:padding="16dp" />
+            android:layout_height="match_parent">
 
-    </FrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerMenu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:padding="8dp" />
 
-    <!-- Add Menu FAB -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvEmptyMessage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="No menu items yet"
+                android:textColor="#999999"
+                android:textSize="16sp"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:contentDescription="Add Menu Item"
-        app:srcCompat="@android:drawable/ic_input_add"
         app:backgroundTint="@color/colorPrimary"
-        app:tint="@android:color/white"
         app:layout_anchor="@id/recyclerMenu"
-        app:layout_anchorGravity="bottom|end" />
+        app:layout_anchorGravity="bottom|end"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -15,15 +15,44 @@
         android:background="@color/colorPrimary"
         app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light" />
 
-    <!-- Restaurants List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerRestaurants"
+    <!-- Main Content Container -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
-        android:padding="12dp"
-        android:clipToPadding="false"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Restaurants List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerRestaurants"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp"
+            android:clipToPadding="false"
+            android:visibility="gone" />
+
+        <!-- Progress Bar -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!-- Empty State Message -->
+        <TextView
+            android:id="@+id/tvEmptyMessage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="No restaurants yet.\nTap + to add your first restaurant!"
+            android:textSize="16sp"
+            android:textColor="#999999"
+            android:visibility="gone"
+            android:padding="32dp"
+            android:textAlignment="center" />
+
+    </FrameLayout>
 
     <!-- Add Restaurant FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
