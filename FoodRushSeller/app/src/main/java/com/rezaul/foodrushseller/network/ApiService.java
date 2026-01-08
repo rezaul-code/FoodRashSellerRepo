@@ -46,13 +46,13 @@ public interface ApiService {
     Call<Restaurant> getRestaurantById(@Path("restaurantId") Long restaurantId);
 
     @Multipart
-    @PUT(Constants.BASE_URL + "/api/seller/restaurant/{restaurantId}/banner")
+    @PUT("/api/seller/restaurant/{restaurantId}/banner")
     Call<ApiResponse> uploadRestaurantBanner(
             @Path("restaurantId") Long restaurantId,
             @Part MultipartBody.Part image
     );
 
-    @DELETE(Constants.BASE_URL + "/api/seller/restaurant/{restaurantId}/banner")
+    @DELETE("/api/seller/restaurant/{restaurantId}/banner")
     Call<ApiResponse> deleteRestaurantBanner(
             @Path("restaurantId") Long restaurantId
     );

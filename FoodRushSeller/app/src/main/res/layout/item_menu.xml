@@ -14,15 +14,45 @@
         android:padding="12dp"
         android:gravity="center_vertical">
 
-        <!-- Menu Image -->
-        <ImageView
-            android:id="@+id/ivMenuImage"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:src="@drawable/ic_restaurant_placeholder"
-            android:scaleType="centerCrop"
-            android:background="@drawable/bg_card"
-            android:contentDescription="Menu Image" />
+        <!-- Menu Image with Edit Button Overlay -->
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+
+            <ImageView
+                android:id="@+id/ivMenuImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="#E0E0E0"
+                android:contentDescription="Menu Image" />
+
+            <!-- No Image Placeholder -->
+            <TextView
+                android:id="@+id/tvNoImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="No\nImage"
+                android:textSize="10sp"
+                android:textColor="#999999"
+                android:gravity="center"
+                android:visibility="gone" />
+
+            <!-- Edit Image Button -->
+            <ImageButton
+                android:id="@+id/btnEditImage"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="4dp"
+                android:background="@drawable/bg_circle_button"
+                android:contentDescription="Edit Image"
+                android:src="@android:drawable/ic_menu_edit"
+                android:tint="@android:color/white"
+                android:padding="4dp"
+                android:scaleType="centerInside" />
+        </FrameLayout>
 
         <!-- Details -->
         <LinearLayout
@@ -30,7 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:paddingStart="12dp">
+            android:paddingStart="12dp"
+            android:paddingEnd="0dp">
 
             <!-- Name -->
             <TextView
@@ -40,7 +71,7 @@
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="#212121"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:ellipsize="end" />
 
             <!-- Price -->
@@ -48,9 +79,19 @@
                 android:id="@+id/tvMenuPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textColor="#388E3C"
+                android:textStyle="bold"
                 android:layout_marginTop="4dp" />
+
+            <!-- Veg/Non-Veg Indicator -->
+            <TextView
+                android:id="@+id/tvVegIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp"
+                android:visibility="gone" />
 
             <!-- Status -->
             <TextView
@@ -59,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textColor="#757575"
-                android:layout_marginTop="6dp" />
+                android:layout_marginTop="2dp" />
 
         </LinearLayout>
 
